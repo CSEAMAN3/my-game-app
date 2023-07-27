@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
+  useEffect(() => {
+    getGames();
+  }, []);
+
+  const [games, setGames] = useState([]);
+
+  async function getGames() {
+    try {
+      const API = `http://localhost:8081/games`;
+      const res = await axios.get(API);
+      console.log(res.data);
+      setGames(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>The Best Console Games Ever Made</h1>
+      {games.map((game, key) => {
+        return (
+          <div key={game.title}>
+            <p>{game.title}</p>
+            <p>{game.year}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }
